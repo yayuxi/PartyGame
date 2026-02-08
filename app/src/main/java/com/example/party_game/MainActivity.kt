@@ -28,13 +28,20 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun App() {
+    PartyFoldTheme {
+        AppContent()
+    }
+}
+
+@Composable
+fun AppContent() {
     Text("Hello Party Fold 👋")
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    Party_GameTheme {
-        App()
+fun AppPreview() {
+    PartyFoldTheme {
+        AppContent()
     }
 }
