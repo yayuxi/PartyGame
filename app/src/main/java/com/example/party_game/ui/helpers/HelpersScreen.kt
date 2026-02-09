@@ -12,18 +12,19 @@ import com.example.party_game.ui.common.TestTags
 
 @Composable
 fun HelpersScreen(
+    helpersText: String,
     onSwitch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ScreenScaffold(title = "Helpers") {
         Text(
-            text = "Give instructions clearly!",
-            modifier = Modifier.testTag(TestTags.HELPERS_INSTRUCTIONS)
+            text = helpersText,
+            modifier = Modifier.testTag("helpers_instructions")
         )
 
         Button(
             onClick = onSwitch,
-            modifier = Modifier.testTag(TestTags.TO_OPERATOR_BUTTON)
+            modifier = Modifier.testTag("to_operator_button")
         ) {
             Text("Back to Operator")
         }
@@ -31,10 +32,15 @@ fun HelpersScreen(
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun HelpersPreview() {
     PartyFoldTheme {
-        HelpersScreen(onSwitch = {})
+        HelpersScreen(
+            helpersText = "Preview helpers text",
+            onSwitch = {}
+        )
     }
 }
+

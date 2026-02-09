@@ -12,18 +12,24 @@ import com.example.party_game.ui.common.TestTags
 
 @Composable
 fun OperatorScreen(
+    taskText: String,
+    onNext: () -> Unit,
     onSwitch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     ScreenScaffold(title = "Operator") {
         Text(
-            text = "Defuse the device!",
-            modifier = Modifier.testTag(TestTags.OPERATOR_TASK)
+            text = taskText,
+            modifier = Modifier.testTag("operator_task")
         )
+
+        Button(onClick = onNext) {
+            Text("Next Step")
+        }
 
         Button(
             onClick = onSwitch,
-            modifier = Modifier.testTag(TestTags.TO_HELPERS_BUTTON)
+            modifier = Modifier.testTag("to_helpers_button")
         ) {
             Text("Show Helpers")
         }
@@ -31,10 +37,16 @@ fun OperatorScreen(
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun OperatorPreview() {
     PartyFoldTheme {
-        OperatorScreen(onSwitch = {})
+        OperatorScreen(
+            taskText = "Preview task",
+            onNext = {},
+            onSwitch = {}
+        )
     }
 }
+

@@ -2,32 +2,27 @@ package com.example.party_game
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import com.example.party_game.ui.operator.OperatorScreen
+import androidx.compose.ui.test.onNodeWithText
+import com.example.party_game.ui.common.FoldRequiredScreen
 import com.example.party_game.ui.theme.PartyFoldTheme
 import org.junit.Rule
 import org.junit.Test
 
-class OperatorScreenTest {
+class FoldRequiredScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
     @Test
-    fun operatorScreen_displaysTaskText() {
+    fun foldedState_showsUnfoldMessage() {
         composeTestRule.setContent {
             PartyFoldTheme {
-                OperatorScreen(
-                    taskText = "Test task",
-                    onNext = {},
-                    onSwitch = {}
-                )
+                FoldRequiredScreen()
             }
         }
 
         composeTestRule
-            .onNodeWithTag("operator_task")
+            .onNodeWithText("Please unfold your device to play 🎉")
             .assertIsDisplayed()
     }
-
 }
