@@ -8,6 +8,7 @@ import com.example.party_game.ui.theme.PartyFoldTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.party_game.ui.common.ScreenScaffold
+import com.example.party_game.ui.common.TestTags
 
 @Composable
 fun HelpersScreen(
@@ -17,12 +18,12 @@ fun HelpersScreen(
     ScreenScaffold(title = "Helpers") {
         Text(
             text = "Give instructions clearly!",
-            modifier = Modifier.testTag("helpers_instructions")
+            modifier = Modifier.testTag(TestTags.HELPERS_INSTRUCTIONS)
         )
 
         Button(
             onClick = onSwitch,
-            modifier = Modifier.testTag("to_operator_button")
+            modifier = Modifier.testTag(TestTags.TO_OPERATOR_BUTTON)
         ) {
             Text("Back to Operator")
         }

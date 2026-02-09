@@ -8,6 +8,7 @@ import com.example.party_game.ui.theme.PartyFoldTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import com.example.party_game.ui.common.ScreenScaffold
+import com.example.party_game.ui.common.TestTags
 
 @Composable
 fun OperatorScreen(
@@ -17,12 +18,12 @@ fun OperatorScreen(
     ScreenScaffold(title = "Operator") {
         Text(
             text = "Defuse the device!",
-            modifier = Modifier.testTag("operator_task")
+            modifier = Modifier.testTag(TestTags.OPERATOR_TASK)
         )
 
         Button(
             onClick = onSwitch,
-            modifier = Modifier.testTag("to_helpers_button")
+            modifier = Modifier.testTag(TestTags.TO_HELPERS_BUTTON)
         ) {
             Text("Show Helpers")
         }
