@@ -12,7 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.party_game.ui.theme.Party_GameTheme
+import androidx.compose.material3.Button
+import androidx.compose.runtime.*
+import com.example.party_game.ui.helpers.HelpersScreen
+import com.example.party_game.ui.operator.OperatorScreen
+import com.example.party_game.ui.theme.PartyFoldTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +37,21 @@ fun App() {
     }
 }
 
+
 @Composable
 fun AppContent() {
-    Text("Hello Party Fold 👋")
+    var screen by remember { mutableStateOf(Screen.OPERATOR) }
+
+    when (screen) {
+        Screen.OPERATOR -> OperatorScreen(
+            onSwitch = { screen = Screen.HELPERS }
+        )
+        Screen.HELPERS -> HelpersScreen(
+            onSwitch = { screen = Screen.OPERATOR }
+        )
+    }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -45,3 +60,4 @@ fun AppPreview() {
         AppContent()
     }
 }
+
