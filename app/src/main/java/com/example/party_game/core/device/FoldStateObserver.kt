@@ -22,29 +22,13 @@ class FoldStateObserver(
             .filterIsInstance<FoldingFeature>()
             .firstOrNull()
 
-        return when {
-            foldingFeature == null -> {
-                // No hinge feature:
-                // If window is small, device is folded
-                if (isLikelyFolded()) DeviceState.FOLDED
-                else DeviceState.UNFOLDED
-            }
-
-            foldingFeature.state == FoldingFeature.State.HALF_OPENED ->
-                DeviceState.FOLDED
-
-            foldingFeature.state == FoldingFeature.State.FLAT ->
-                DeviceState.UNFOLDED
-
-            else -> DeviceState.UNFOLDED
+        return when (foldingFeature?.state) {
+            FoldingFeature.State.HALF_OPENED -> DeviceState.FOLDED
+            FoldingFeature.State.FLAT -> DeviceState.UNFOLDED
+            else -> DeviceState.FOLDED
         }
     }
 
-    private fun WindowLayoutInfo.isLikelyFolded(): Boolean {
-        // When folded, outer display is typically narrow
-        val bounds = displayFeatures.firstOrNull()?.bounds
-        return bounds == null
-    }
 
 
 }
