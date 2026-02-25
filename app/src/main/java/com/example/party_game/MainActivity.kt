@@ -8,6 +8,10 @@ import android.view.Surface
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.window.layout.WindowInfoTracker
+import androidx.lifecycle.lifecycleScope
+import androidx.compose.runtime.collectAsState
+import kotlinx.coroutines.launch
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -39,6 +43,7 @@ import com.example.party_game.core.device.DeviceState
 import com.example.party_game.core.device.FoldStateObserver
 import com.example.party_game.game.GameViewModel
 import com.example.party_game.ui.common.FoldRequiredScreen
+import com.example.party_game.ui.layout.DualScreenLayout
 
 class MainActivity : ComponentActivity() {
 
@@ -54,24 +59,13 @@ class MainActivity : ComponentActivity() {
 
         foldStateObserver = FoldStateObserver(this)
 
-        lifecycleScope.launchWhenStarted {
-            foldStateObserver.deviceState.collect { deviceState ->
-                Log.d("ORIENTATION_DEBUG", "onCreate: $deviceState")
-            }
-        }
-
         setContent {
             PartyFoldTheme {
-                val deviceState by foldStateObserver.deviceState
-                    .collectAsState(initial = DeviceState.UNFOLDED)
 
-                if (deviceState == DeviceState.FOLDED) {
-                    AppContent(deviceState = deviceState)
-                } else {
-                    ReverseLandscapeContainer {
-                        AppContent(deviceState = deviceState)
-                    }
-                }
+                val deviceState by foldStateObserver.deviceState
+                    .collectAsState(initial = DeviceState.SingleScreen)
+
+                AppContent(deviceState = deviceState)
             }
         }
 
@@ -100,19 +94,47 @@ fun AppContent(
     var screen by remember { mutableStateOf(Screen.OPERATOR) }
 
     when (deviceState) {
-        DeviceState.FOLDED -> FoldRequiredScreen()
-        DeviceState.UNFOLDED -> {
+
+        is DeviceState.Folded -> {
+            FoldRequiredScreen()
+        }
+
+        is DeviceState.SingleScreen -> {
+
+            var screen by remember { mutableStateOf(Screen.OPERATOR) }
+
             when (screen) {
+
                 Screen.OPERATOR -> OperatorScreen(
                     taskText = gameState.taskText,
                     onNext = gameViewModel::nextStep,
                     onSwitch = { screen = Screen.HELPERS }
                 )
+
                 Screen.HELPERS -> HelpersScreen(
                     helpersText = gameState.helpersText,
                     onSwitch = { screen = Screen.OPERATOR }
                 )
             }
+        }
+
+        is DeviceState.DualScreen -> {
+            DualScreenLayout(
+                isVertical = deviceState.isVertical,
+                operatorContent = {
+                    OperatorScreen(
+                        taskText = gameState.taskText,
+                        onNext = gameViewModel::nextStep,
+                        onSwitch = {}
+                    )
+                },
+                helperContent = {
+                    HelpersScreen(
+                        helpersText = gameState.helpersText,
+                        onSwitch = {}
+                    )
+                }
+            )
         }
     }
 }
@@ -154,7 +176,7 @@ fun ReverseLandscapeContainer(
 @Composable
 fun AppUnfoldedPreview() {
     PartyFoldTheme {
-        AppContent(deviceState = DeviceState.UNFOLDED)
+        AppContent(deviceState = DeviceState.SingleScreen)
     }
 }
 
@@ -162,7 +184,7 @@ fun AppUnfoldedPreview() {
 @Composable
 fun AppFoldedPreview() {
     PartyFoldTheme {
-        AppContent(deviceState = DeviceState.FOLDED)
+        AppContent(deviceState = DeviceState.Folded)
     }
 }
 

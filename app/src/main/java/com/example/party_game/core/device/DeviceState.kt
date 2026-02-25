@@ -1,6 +1,15 @@
 package com.example.party_game.core.device
 
-enum class DeviceState {
-    FOLDED,
-    UNFOLDED
+import android.graphics.Rect
+
+sealed class DeviceState {
+
+    object Folded : DeviceState()
+
+    object SingleScreen : DeviceState()
+
+    data class DualScreen(
+        val hingeBounds: Rect,
+        val isVertical: Boolean
+    ) : DeviceState()
 }

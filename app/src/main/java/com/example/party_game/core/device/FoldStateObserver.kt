@@ -6,6 +6,7 @@ import androidx.window.layout.WindowInfoTracker
 import androidx.window.layout.WindowLayoutInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import com.example.party_game.core.device.DeviceState
 
 class FoldStateObserver(
     activity: Activity
@@ -18,17 +19,26 @@ class FoldStateObserver(
             .map { layoutInfo -> layoutInfo.toDeviceState() }
 
     private fun WindowLayoutInfo.toDeviceState(): DeviceState {
+
         val foldingFeature = displayFeatures
             .filterIsInstance<FoldingFeature>()
             .firstOrNull()
 
-        return when (foldingFeature?.state) {
-            FoldingFeature.State.HALF_OPENED -> DeviceState.FOLDED
-            FoldingFeature.State.FLAT -> DeviceState.UNFOLDED
-            else -> DeviceState.FOLDED
+        return when {
+            foldingFeature == null -> {
+                // No hinge reported → device fully folded
+                DeviceState.Folded
+            }
+
+            foldingFeature.state == FoldingFeature.State.HALF_OPENED -> {
+                DeviceState.Folded
+            }
+
+            foldingFeature.state == FoldingFeature.State.FLAT -> {
+                DeviceState.DualScreen
+            }
+
+            else -> DeviceState.Folded
         }
     }
-
-
-
 }
