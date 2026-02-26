@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
             PartyFoldTheme {
 
                 val deviceState by foldStateObserver.deviceState
-                    .collectAsState(initial = DeviceState.SingleScreen)
+                    .collectAsState(initial = DeviceState.SINGLE_SCREEN)
 
                 AppContent(deviceState = deviceState)
             }
@@ -95,43 +95,31 @@ fun AppContent(
 
     when (deviceState) {
 
-        is DeviceState.Folded -> {
+        DeviceState.FOLDED -> {
             FoldRequiredScreen()
         }
 
-        is DeviceState.SingleScreen -> {
-
-            var screen by remember { mutableStateOf(Screen.OPERATOR) }
-
-            when (screen) {
-
-                Screen.OPERATOR -> OperatorScreen(
-                    taskText = gameState.taskText,
-                    onNext = gameViewModel::nextStep,
-                    onSwitch = { screen = Screen.HELPERS }
-                )
-
-                Screen.HELPERS -> HelpersScreen(
-                    helpersText = gameState.helpersText,
-                    onSwitch = { screen = Screen.OPERATOR }
-                )
-            }
+        DeviceState.SINGLE_SCREEN -> {
+            OperatorScreen(
+                taskText = gameState.taskText,
+                onNext = gameViewModel::nextStep,
+                onSwitch = { screen = Screen.HELPERS }
+            )
         }
 
-        is DeviceState.DualScreen -> {
+        DeviceState.DUAL_SCREEN -> {
             DualScreenLayout(
-                isVertical = deviceState.isVertical,
                 operatorContent = {
                     OperatorScreen(
                         taskText = gameState.taskText,
                         onNext = gameViewModel::nextStep,
-                        onSwitch = {}
+                        onSwitch = { screen = Screen.HELPERS }
                     )
                 },
                 helperContent = {
                     HelpersScreen(
                         helpersText = gameState.helpersText,
-                        onSwitch = {}
+                        onSwitch = { }
                     )
                 }
             )
@@ -176,7 +164,7 @@ fun ReverseLandscapeContainer(
 @Composable
 fun AppUnfoldedPreview() {
     PartyFoldTheme {
-        AppContent(deviceState = DeviceState.SingleScreen)
+        AppContent(deviceState = DeviceState.SINGLE_SCREEN)
     }
 }
 
@@ -184,7 +172,7 @@ fun AppUnfoldedPreview() {
 @Composable
 fun AppFoldedPreview() {
     PartyFoldTheme {
-        AppContent(deviceState = DeviceState.Folded)
+        AppContent(deviceState = DeviceState.FOLDED)
     }
 }
 

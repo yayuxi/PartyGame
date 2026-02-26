@@ -21,53 +21,27 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.ui.input.pointer.pointerInput
 
 @Composable
 fun DualScreenLayout(
-    isVertical: Boolean,
     operatorContent: @Composable () -> Unit,
     helperContent: @Composable () -> Unit
 ) {
-    if (isVertical) {
+    Row(modifier = Modifier.fillMaxSize()) {
 
-        Row(Modifier.fillMaxSize()) {
-
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                operatorContent()
-            }
-
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                helperContent()
-            }
+        Box(
+            modifier = Modifier.weight(1f)
+        ) {
+            operatorContent()
         }
 
-    } else {
-
-        Column(Modifier.fillMaxSize()) {
-
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
-                operatorContent()
-            }
-
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            ) {
-                helperContent()
-            }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .pointerInput(Unit) { } // blocks interaction
+        ) {
+            helperContent()
         }
     }
 }

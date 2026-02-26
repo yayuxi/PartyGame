@@ -24,21 +24,25 @@ class FoldStateObserver(
             .filterIsInstance<FoldingFeature>()
             .firstOrNull()
 
+        if (foldingFeature == null) {
+            return DeviceState.FOLDED
+        }
+
         return when {
-            foldingFeature == null -> {
-                // No hinge reported → device fully folded
-                DeviceState.Folded
+            foldingFeature.state == FoldingFeature.State.HALF_OPENED -> {
+                DeviceState.FOLDED
             }
 
-            foldingFeature.state == FoldingFeature.State.HALF_OPENED -> {
-                DeviceState.Folded
+            foldingFeature.state == FoldingFeature.State.FLAT &&
+                    foldingFeature.isSeparating -> {
+                DeviceState.DUAL_SCREEN
             }
 
             foldingFeature.state == FoldingFeature.State.FLAT -> {
-                DeviceState.DualScreen
+                DeviceState.SINGLE_SCREEN
             }
 
-            else -> DeviceState.Folded
+            else -> DeviceState.FOLDED
         }
     }
 }
