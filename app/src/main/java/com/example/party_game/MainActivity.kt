@@ -43,6 +43,7 @@ import com.example.party_game.core.device.DeviceState
 import com.example.party_game.core.device.FoldStateObserver
 import com.example.party_game.game.GameViewModel
 import com.example.party_game.ui.common.FoldRequiredScreen
+import com.example.party_game.ui.common.ForcedRotationContainer
 import com.example.party_game.ui.layout.DualScreenLayout
 
 class MainActivity : ComponentActivity() {
@@ -100,21 +101,25 @@ fun AppContent(
         }
 
         DeviceState.SINGLE_SCREEN -> {
-            OperatorScreen(
-                taskText = gameState.taskText,
-                onNext = gameViewModel::nextStep,
-                onSwitch = { screen = Screen.HELPERS }
-            )
+            ForcedRotationContainer {
+                OperatorScreen(
+                    taskText = gameState.taskText,
+                    onNext = gameViewModel::nextStep,
+                    onSwitch = { screen = Screen.HELPERS }
+                )
+            }
         }
 
         DeviceState.DUAL_SCREEN -> {
             DualScreenLayout(
                 operatorContent = {
-                    OperatorScreen(
-                        taskText = gameState.taskText,
-                        onNext = gameViewModel::nextStep,
-                        onSwitch = { screen = Screen.HELPERS }
-                    )
+                    ForcedRotationContainer {
+                        OperatorScreen(
+                            taskText = gameState.taskText,
+                            onNext = gameViewModel::nextStep,
+                            onSwitch = { screen = Screen.HELPERS }
+                        )
+                    }
                 },
                 helperContent = {
                     HelpersScreen(
